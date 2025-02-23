@@ -1,5 +1,13 @@
 import { FC } from 'react';
 import { Anime } from '../types';
+import { useAppDispatch } from '../app/hooks';
+import { useSelector } from 'react-redux';
+import {
+  addSelectedAnimeCard,
+  removeSelectedAnimeCard,
+  selectIsAnimeCardSelected,
+} from '../features/animeCards/animeCardsSlice';
+import { RootState } from '../app/store';
 
 interface CardProps {
   anime: Anime;
@@ -7,6 +15,22 @@ interface CardProps {
 }
 
 const Card: FC<CardProps> = ({ anime, onAnimeSelect }) => {
+  const dispatch = useAppDispatch();
+  const isAnimeSelected = useSelector((state: RootState) =>
+    selectIsAnimeCardSelected(state, anime.mal_id!)
+  );
+
+  const toggleSelectAnime = (id: number | undefined) => {
+    if (!id) return;
+
+    if (isAnimeSelected) {
+      dispatch(removeSelectedAnimeCard(id));
+      return;
+    }
+
+    dispatch(addSelectedAnimeCard(id));
+  };
+
   return (
     <div
       role="article"
@@ -28,7 +52,11 @@ const Card: FC<CardProps> = ({ anime, onAnimeSelect }) => {
             {anime.title}
           </h3>
           <div>
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              checked={isAnimeSelected}
+              onChange={() => toggleSelectAnime(anime.mal_id)}
+            />
           </div>
         </div>
         <p className="text-gray-600 text-sm hover:cursor-text">

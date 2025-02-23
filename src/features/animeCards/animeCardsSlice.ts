@@ -1,18 +1,35 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Anime } from '../../types';
+// import { Anime } from '../../types';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../../app/store';
 
 interface AnimeCardsState {
-  anime: Anime[];
+  selectedAnime: number[];
 }
 
 const initialState: AnimeCardsState = {
-  anime: [],
+  selectedAnime: [],
 };
 
 export const animeCardsSlice = createSlice({
   name: 'animeCards',
   initialState,
-  reducers: {},
+  reducers: {
+    addSelectedAnimeCard: (state, action: PayloadAction<number>) => {
+      state.selectedAnime.push(action.payload);
+    },
+    removeSelectedAnimeCard: (state, action: PayloadAction<number>) => {
+      state.selectedAnime = state.selectedAnime.filter(
+        (anime) => anime !== action.payload
+      );
+    },
+  },
 });
+
+export const { addSelectedAnimeCard, removeSelectedAnimeCard } =
+  animeCardsSlice.actions;
+
+export const selectIsAnimeCardSelected = (state: RootState, cardId: number) =>
+  state.animeCards.selectedAnime.includes(cardId);
 
 export default animeCardsSlice.reducer;
