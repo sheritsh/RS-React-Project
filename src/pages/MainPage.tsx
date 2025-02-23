@@ -13,16 +13,13 @@ import { getErrorMessage, useFetchAnimeQuery } from '../features/api/apiSlice';
 const MainPage: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useLocalStorage<string>('searchTerm', '');
-  // const [animeList, setAnimeList] = useState<Anime[]>([]);
+  const [queryTerm, setQueryTerm] = useState<string>('');
   const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null);
-  // const [loading, setLoading] = useState(false);
-  // const [error, setError] = useState<string | null>(null);
-  // const [totalPages, setTotalPages] = useState(1);
   const currentPage = Number(searchParams.get('page')) || 1;
   const selectedId = searchParams.get('details');
 
   const { data, error, isLoading } = useFetchAnimeQuery({
-    searchTerm,
+    searchTerm: queryTerm,
     page: currentPage,
   });
 
@@ -65,12 +62,22 @@ const MainPage: FC = () => {
   const handleSearch = (term: string) => {
     const trimmedTerm = term.trim();
     setSearchTerm(trimmedTerm);
+    setQueryTerm(trimmedTerm);
+    setSearchParams({ page: '1' });
+  };
+
+  const handleResetSearch = () => {
+    setQueryTerm(''); // Сбрасываем запрос
     setSearchParams({ page: '1' });
   };
 
   return (
     <>
-      <Header searchTerm={searchTerm} onSearch={handleSearch} />
+      <Header
+        searchTerm={searchTerm}
+        onSearch={handleSearch}
+        reset={handleResetSearch}
+      />
       <main className="flex-grow container mx-auto px-4 py-8">
         {isLoading ? (
           <Loader />

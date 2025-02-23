@@ -6,9 +6,10 @@ import Search from './Search';
 interface HeaderProps {
   searchTerm: string;
   onSearch: (term: string) => void;
+  reset: () => void;
 }
 
-const Header: FC<HeaderProps> = ({ searchTerm, onSearch }) => {
+const Header: FC<HeaderProps> = ({ searchTerm, onSearch, reset }) => {
   return (
     <header className="bg-gray-800 text-gray shadow-md py-4 px-6">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
@@ -21,6 +22,7 @@ const Header: FC<HeaderProps> = ({ searchTerm, onSearch }) => {
               src={logo}
               alt="Логотип"
               className="h-12 w-auto object-contain"
+              onClick={() => reset()}
             />
           </Link>
         </div>

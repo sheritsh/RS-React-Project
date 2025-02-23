@@ -1,4 +1,4 @@
-import { FC, useState, FormEvent } from 'react';
+import { FC, useState, FormEvent, useEffect } from 'react';
 
 interface SearchProps {
   searchTerm: string;
@@ -7,6 +7,10 @@ interface SearchProps {
 
 const Search: FC<SearchProps> = ({ searchTerm, onSearch }) => {
   const [input, setInput] = useState(searchTerm);
+
+  useEffect(() => {
+    setInput(searchTerm);
+  }, [searchTerm]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
