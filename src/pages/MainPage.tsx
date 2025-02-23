@@ -1,50 +1,37 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { Anime } from '../types';
-import { fetchAnime } from '../api';
 import Header from '../components/Header';
 import SearchResults from '../components/SearchResults';
 import AnimeDetails from '../components/AnimeDetails';
 import Pagination from '../components/Pagination';
 import Loader from '../components/Loader';
 import ErrorFetch from '../components/ErrorFetch';
+import { getErrorMessage, useFetchAnimeQuery } from '../features/api/apiSlice';
 
 const MainPage: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useLocalStorage<string>('searchTerm', '');
-  const [animeList, setAnimeList] = useState<Anime[]>([]);
+  // const [animeList, setAnimeList] = useState<Anime[]>([]);
   const [selectedAnime, setSelectedAnime] = useState<Anime | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [totalPages, setTotalPages] = useState(1);
-
+  // const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState<string | null>(null);
+  // const [totalPages, setTotalPages] = useState(1);
   const currentPage = Number(searchParams.get('page')) || 1;
   const selectedId = searchParams.get('details');
 
-  const loadAnimeData = async (term: string, page: number) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await fetchAnime(term, page);
-      setAnimeList(data.data);
-      setTotalPages(
-        Math.ceil(data.pagination.items.total / data.pagination.items.per_page)
-      );
-    } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : 'Произошла ошибка при загрузке данных'
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data, error, isLoading } = useFetchAnimeQuery({
+    searchTerm,
+    page: currentPage,
+  });
 
-  useEffect(() => {
-    loadAnimeData(searchTerm, currentPage);
-  }, [searchTerm, currentPage]);
+  const totalPages = data
+    ? Math.ceil(data.pagination.items.total / data.pagination.items.per_page)
+    : 1;
+  const animeList = useMemo(() => {
+    return data ? data.data : [];
+  }, [data]);
 
   useEffect(() => {
     if (selectedId) {
@@ -85,10 +72,10 @@ const MainPage: FC = () => {
     <>
       <Header searchTerm={searchTerm} onSearch={handleSearch} />
       <main className="flex-grow container mx-auto px-4 py-8">
-        {loading ? (
+        {isLoading ? (
           <Loader />
         ) : error ? (
-          <ErrorFetch errorMessage={error} />
+          <ErrorFetch errorMessage={getErrorMessage(error)} />
         ) : (
           <div className="flex flex-grow relative">
             <div

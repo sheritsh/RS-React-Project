@@ -43,7 +43,7 @@ const Card: FC<CardProps> = ({ anime, onAnimeSelect }) => {
         onClick={() => onAnimeSelect(anime)}
       />
 
-      <div>
+      <div className="size-full">
         <div className="flex justify-between items-center">
           <h3
             onClick={() => onAnimeSelect(anime)}
