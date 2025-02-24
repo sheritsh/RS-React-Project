@@ -6,6 +6,7 @@ import {
 
 import type { Anime } from '../../types';
 import { SerializedError } from '@reduxjs/toolkit/react';
+import { setAllAnime } from '../animeCards/animeCardsSlice';
 
 interface AnimeResponse {
   data: Anime[];
@@ -34,6 +35,14 @@ export const apiSlice = createApi({
           ? `?q=${searchTerm}&page=${page}`
           : `?page=${page}`;
         return url;
+      },
+      async onQueryStarted(_unused, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setAllAnime(data.data)); // Сохраняем данные в animeCardsSlice
+        } catch (error) {
+          console.error('Ошибка при получении данных:', error);
+        }
       },
     }),
     fetchAnimeDetails: build.query<{ data: Anime }, number>({

@@ -34,12 +34,12 @@ const Card: FC<CardProps> = ({ anime, onAnimeSelect }) => {
   return (
     <div
       role="article"
-      className="card hover:cursor-pointer transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-105 p-4 bg-white shadow-md rounded-lg w-full flex"
+      className="card transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-101 p-4 bg-white shadow-md rounded-lg w-full flex"
     >
       <img
         src={anime.images?.webp?.image_url || ''}
         alt={anime.title}
-        className="w-32 h-32 object-cover rounded-lg mr-4"
+        className="w-32 h-32 object-cover rounded-lg mr-4 cursor-pointer"
         onClick={() => onAnimeSelect(anime)}
       />
 
@@ -47,7 +47,7 @@ const Card: FC<CardProps> = ({ anime, onAnimeSelect }) => {
         <div className="flex justify-between items-center">
           <h3
             onClick={() => onAnimeSelect(anime)}
-            className="text-xl font-semibold text-gray-800 mb-2"
+            className="text-xl font-semibold text-gray-800 mb-2 cursor-pointer"
           >
             {anime.title}
           </h3>

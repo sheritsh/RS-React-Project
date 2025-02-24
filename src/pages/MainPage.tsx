@@ -9,6 +9,7 @@ import Pagination from '../components/Pagination';
 import Loader from '../components/Loader';
 import ErrorFetch from '../components/ErrorFetch';
 import { getErrorMessage, useFetchAnimeQuery } from '../features/api/apiSlice';
+import Flyout from '../components/Flyout';
 
 const MainPage: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -110,6 +111,7 @@ const MainPage: FC = () => {
                 </div>
               </div>
             )}
+            <Flyout />
           </div>
         )}
       </main>
