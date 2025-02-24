@@ -1,30 +1,49 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 import SearchResults from '../SearchResults';
-import { mockAnime } from '../../__tests__/test-utils';
+import animeCardsReducer from '../../features/animeCards/animeCardsSlice';
 
-describe('SearchResults Component', () => {
-  it('renders list of anime cards', () => {
-    const animeList = [mockAnime, { ...mockAnime, mal_id: 2 }];
-    render(<SearchResults animeList={animeList} onAnimeSelect={() => {}} />);
+const mockStore = configureStore({
+  reducer: {
+    animeCards: animeCardsReducer,
+  },
+});
 
-    const cards = screen.getAllByRole('article');
-    expect(cards).toHaveLength(2);
+describe('SearchResults', () => {
+  const mockOnAnimeSelect = vi.fn();
+  const mockAnimeList = [
+    {
+      mal_id: 1,
+      title: 'Test Anime',
+      synopsis: 'Test synopsis',
+      images: { webp: { image_url: 'test.jpg' } },
+    },
+  ];
+
+  it('renders anime cards when results exist', () => {
+    render(
+      <Provider store={mockStore}>
+        <SearchResults
+          animeList={mockAnimeList}
+          onAnimeSelect={mockOnAnimeSelect}
+        />
+      </Provider>
+    );
+
+    expect(screen.getByText('Test Anime')).toBeInTheDocument();
   });
 
-  it('displays empty message when no results', () => {
-    render(<SearchResults animeList={[]} onAnimeSelect={() => {}} />);
+  it('shows no results message when list is empty', () => {
+    render(
+      <Provider store={mockStore}>
+        <SearchResults animeList={[]} onAnimeSelect={mockOnAnimeSelect} />
+      </Provider>
+    );
+
     expect(
       screen.getByText('По указанному запросу ничего не нашлось')
     ).toBeInTheDocument();
-  });
-
-  it('passes correct props to Card components', () => {
-    const onAnimeSelect = vi.fn();
-    render(
-      <SearchResults animeList={[mockAnime]} onAnimeSelect={onAnimeSelect} />
-    );
-
-    expect(screen.getByText('Test synopsis...')).toBeInTheDocument();
   });
 });

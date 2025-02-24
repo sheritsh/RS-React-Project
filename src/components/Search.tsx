@@ -1,4 +1,4 @@
-import { FC, useState, FormEvent } from 'react';
+import { FC, useState, FormEvent, useEffect } from 'react';
 
 interface SearchProps {
   searchTerm: string;
@@ -8,13 +8,17 @@ interface SearchProps {
 const Search: FC<SearchProps> = ({ searchTerm, onSearch }) => {
   const [input, setInput] = useState(searchTerm);
 
+  useEffect(() => {
+    setInput(searchTerm);
+  }, [searchTerm]);
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     onSearch(input);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
+    <form onSubmit={handleSubmit} role="form" className="flex gap-2">
       <input
         type="text"
         value={input}

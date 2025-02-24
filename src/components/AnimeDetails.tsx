@@ -1,8 +1,10 @@
-import { FC, useState, useEffect } from 'react';
-import { Anime } from '../types';
-import { fetchAnimeDetails } from '../api';
+import { FC } from 'react';
 import Loader from './Loader';
 import ErrorFetch from './ErrorFetch';
+import {
+  getErrorMessage,
+  useFetchAnimeDetailsQuery,
+} from '../features/api/apiSlice';
 
 interface AnimeDetailsProps {
   animeId: number;
@@ -10,37 +12,16 @@ interface AnimeDetailsProps {
 }
 
 const AnimeDetails: FC<AnimeDetailsProps> = ({ animeId, onClose }) => {
-  const [anime, setAnime] = useState<Anime | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, error, isLoading } = useFetchAnimeDetailsQuery(animeId);
 
-  useEffect(() => {
-    const loadAnimeDetails = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await fetchAnimeDetails(animeId);
-        setAnime(data);
-      } catch (error) {
-        setError(
-          error instanceof Error
-            ? error.message
-            : 'Произошла ошибка при загрузке данных'
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadAnimeDetails();
-  }, [animeId]);
-
-  if (loading) return <Loader />;
-  if (error) return <ErrorFetch errorMessage={error} />;
-  if (!anime) return null;
+  if (isLoading) return <Loader />;
+  if (error) {
+    return <ErrorFetch errorMessage={getErrorMessage(error)} />;
+  }
+  if (!data) return null;
 
   return (
-    <div className="p-4 relative">
+    <div className="p-4 relative light:bg-white dark:bg-[#101828] min-h-screen max-w-screen z-500">
       <button
         role="button"
         aria-label="закрыть"
@@ -64,29 +45,31 @@ const AnimeDetails: FC<AnimeDetailsProps> = ({ animeId, onClose }) => {
 
       <div className="flex flex-col items-center gap-4">
         <img
-          src={anime.images?.webp?.image_url || ''}
-          alt={anime.title}
+          src={data.data.images?.webp?.image_url || ''}
+          alt={data.data.title}
           className="w-64 h-auto rounded-lg shadow-lg"
         />
-        <h2 className="text-2xl font-bold text-gray-800">{anime.title}</h2>
-        <p className="text-gray-600">{anime.synopsis}</p>
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+          {data.data.title}
+        </h2>
+        <p className="text-gray-600 dark:text-gray-300">{data.data.synopsis}</p>
 
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <span className="font-semibold">Рейтинг:</span>{' '}
-            {anime.score || 'Нет данных'}
+            {data.data.score || 'Нет данных'}
           </div>
           <div>
             <span className="font-semibold">Эпизоды:</span>{' '}
-            {anime.episodes || 'Нет данных'}
+            {data.data.episodes || 'Нет данных'}
           </div>
           <div>
             <span className="font-semibold">Статус:</span>{' '}
-            {anime.status || 'Нет данных'}
+            {data.data.status || 'Нет данных'}
           </div>
           <div>
             <span className="font-semibold">Год:</span>{' '}
-            {anime.year || 'Нет данных'}
+            {data.data.year || 'Нет данных'}
           </div>
         </div>
       </div>

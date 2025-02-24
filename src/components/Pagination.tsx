@@ -19,11 +19,11 @@ const Pagination: FC<PaginationProps> = ({
   });
 
   return (
-    <div className="flex justify-center gap-2 p-4">
+    <div className="flex justify-center gap-2 p-4 max-[400px]:scale-50 [@media(min-width:400px)_and_(max-width:639px)]:scale-70">
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Назад
       </button>
@@ -32,7 +32,7 @@ const Pagination: FC<PaginationProps> = ({
         <>
           <button
             onClick={() => onPageChange(1)}
-            className="px-4 py-2 rounded hover:bg-gray-100 hover:cursor-pointer"
+            className="px-4 py-2 rounded hover:bg-gray-100 hover:cursor-pointer dark:hover:bg-gray-700"
           >
             1
           </button>
@@ -49,7 +49,7 @@ const Pagination: FC<PaginationProps> = ({
           className={`px-4 py-2 rounded ${
             currentPage === page
               ? 'bg-blue-500 text-white'
-              : 'hover:bg-gray-100 hover:cursor-pointer'
+              : 'hover:bg-gray-100 hover:cursor-pointer dark:hover:bg-gray-700'
           }`}
         >
           {page}
@@ -63,7 +63,7 @@ const Pagination: FC<PaginationProps> = ({
           )}
           <button
             onClick={() => onPageChange(totalPages)}
-            className="px-4 py-2 rounded hover:bg-gray-100 hover:cursor-pointer"
+            className="px-4 py-2 rounded hover:bg-gray-100 hover:cursor-pointer  dark:hover:bg-gray-700"
           >
             {totalPages}
           </button>
@@ -73,7 +73,7 @@ const Pagination: FC<PaginationProps> = ({
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Вперед
       </button>

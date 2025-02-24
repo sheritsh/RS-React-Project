@@ -1,57 +1,64 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 import Main from '../Main';
-import { mockAnime } from '../../__tests__/test-utils';
+import animeCardsReducer from '../../features/animeCards/animeCardsSlice';
 
-vi.mock('../CardList', () => ({
-  default: () => <div data-testid="card-list">Mocked CardList</div>,
-}));
+const mockStore = configureStore({
+  reducer: {
+    animeCards: animeCardsReducer,
+  },
+});
 
-describe('Main Component', () => {
-  const mockProps = {
-    animeList: [mockAnime],
-    onAnimeSelect: () => {},
-  };
+const mockAnimeList = [
+  {
+    mal_id: 1,
+    title: 'Test Anime',
+    synopsis: 'Test synopsis',
+    images: { webp: { image_url: 'test.jpg' } },
+  },
+];
 
-  it('renders children correctly', () => {
+describe('Main', () => {
+  const mockOnAnimeSelect = vi.fn();
+
+  it('renders children content', () => {
     render(
-      <Main {...mockProps}>
-        <div className="OMG" data-testid="test-content">
-          Test Content
-        </div>
-      </Main>
+      <Provider store={mockStore}>
+        <Main animeList={[]} onAnimeSelect={mockOnAnimeSelect}>
+          <div>Test Child Content</div>
+        </Main>
+      </Provider>
     );
 
-    expect(screen.getByTestId('test-content')).toBeInTheDocument();
-    expect(screen.getByTestId('test-content')).toHaveTextContent(
-      'Test Content'
-    );
+    expect(screen.getByText('Test Child Content')).toBeInTheDocument();
   });
 
-  it('applies correct classes', () => {
+  it('renders anime list', () => {
     render(
-      <Main {...mockProps}>
-        <div>Test Content</div>
-      </Main>
+      <Provider store={mockStore}>
+        <Main animeList={mockAnimeList} onAnimeSelect={mockOnAnimeSelect} />
+      </Provider>
     );
 
-    const mainElement = screen.getByRole('main');
-    expect(mainElement).toHaveClass(
+    expect(screen.getByText('Test Anime')).toBeInTheDocument();
+  });
+
+  it('has correct role and classes', () => {
+    render(
+      <Provider store={mockStore}>
+        <Main animeList={[]} onAnimeSelect={mockOnAnimeSelect} />
+      </Provider>
+    );
+
+    const main = screen.getByRole('main');
+    expect(main).toHaveClass(
       'flex-grow',
       'container',
       'mx-auto',
       'px-4',
       'py-8'
     );
-  });
-
-  it('renders CardList component', () => {
-    render(
-      <Main {...mockProps}>
-        <div>Test Content</div>
-      </Main>
-    );
-
-    expect(screen.getByTestId('card-list')).toBeInTheDocument();
   });
 });
