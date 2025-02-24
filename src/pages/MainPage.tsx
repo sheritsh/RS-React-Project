@@ -111,7 +111,7 @@ const MainPage: FC = () => {
                 </div>
               </div>
             )}
-            <Flyout />
+            {!selectedAnime && <Flyout />}
           </div>
         )}
       </main>

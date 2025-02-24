@@ -27,21 +27,21 @@ const Flyout: React.FC = () => {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 p-4 shadow-lg z-10">
+    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 p-4 max-sm:p-1 shadow-lg z-10 max-w-screen">
       <div className="flex justify-between items-center">
-        <span className="text-black dark:text-white">
+        <span className="text-black dark:text-white max-sm:scale-70">
           {selectedAnime.length} аниме выбрано для загрузки данных
         </span>
-        <div>
+        <div className='max-sm:flex max-sm:justify-center'>
           <button
             onClick={() => dispatch(unselectAllAnimeCards())}
-            className="mr-4 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded cursor-pointer select-none"
+            className="mr-4 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded cursor-pointer select-none max-sm:scale-70 max-sm:center"
           >
             Отменить выбранные
           </button>
           <button
             onClick={handleDownload}
-            className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer select-none"
+            className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer select-none max-sm:scale-70"
           >
             Скачать
           </button>

@@ -21,7 +21,7 @@ const AnimeDetails: FC<AnimeDetailsProps> = ({ animeId, onClose }) => {
   if (!data) return null;
 
   return (
-    <div className="p-4 relative light:bg-white dark:bg-[#101828] h-screen">
+    <div className="p-4 relative light:bg-white dark:bg-[#101828] min-h-screen max-w-screen z-500">
       <button
         role="button"
         aria-label="закрыть"
