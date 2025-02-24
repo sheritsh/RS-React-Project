@@ -59,7 +59,7 @@ const Card: FC<CardProps> = ({ anime, onAnimeSelect }) => {
             />
           </div>
         </div>
-        <p className="text-gray-600 text-sm hover:cursor-text">
+        <p className="text-gray-600 text-sm hover:cursor-text dark:text-gray-400">
           {anime.synopsis
             ? anime.synopsis.substring(0, 100) + '...'
             : 'Описание отсутствует'}

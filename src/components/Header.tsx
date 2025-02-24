@@ -30,7 +30,7 @@ const Header: FC<HeaderProps> = ({ searchTerm, onSearch, reset }) => {
         <div className="md:w-auto flex-grow max-w-2xl">
           <Search searchTerm={searchTerm} onSearch={onSearch} />
         </div>
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 max-sm:scale-70 max-sm:top-0 max-sm:right-0 max-md:absolute max-md:top-3 max-md:right-3 hover:brightness-110 transition-brightness duration-200">
           <ThemeSelector />
         </div>
       </div>
