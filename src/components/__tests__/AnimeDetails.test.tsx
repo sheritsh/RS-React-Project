@@ -2,19 +2,49 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import AnimeDetails from '../AnimeDetails';
 import { mockAnime } from '../../__tests__/test-utils';
-import { fetchAnimeDetails } from '../../api';
+import {
+  apiSlice,
+  useFetchAnimeDetailsQuery,
+} from '../../features/api/apiSlice';
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
 
-vi.mock('../../api', () => ({
-  fetchAnimeDetails: vi.fn(),
-}));
+// Мокируем RTK Query хук
+vi.mock('../../features/api/apiSlice', async (importOriginal) => {
+  const actual = await importOriginal() as object;
+
+  return {
+    ...actual,
+    useFetchAnimeDetailsQuery: vi.fn(),
+  };
+});
+
+// Создаем моковое хранилище
+const mockStore = configureStore({
+  reducer: {
+    [apiSlice.reducerPath]: apiSlice.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(apiSlice.middleware),
+});
 
 describe('AnimeDetails Component', () => {
   const mockOnClose = vi.fn();
 
   it('shows loading state initially', async () => {
-    vi.mocked(fetchAnimeDetails).mockResolvedValue(mockAnime);
+    vi.mocked(useFetchAnimeDetailsQuery).mockReturnValue({
+      data: undefined,
+      isLoading: true,
+      isError: false,
+      error: undefined,
+      refetch: vi.fn(),
+    });
 
-    render(<AnimeDetails animeId={1} onClose={mockOnClose} />);
+    render(
+      <Provider store={mockStore}>
+        <AnimeDetails animeId={1} onClose={mockOnClose} />
+      </Provider>
+    );
 
     expect(screen.getByText(/загрузка/i)).toBeInTheDocument();
 
@@ -24,9 +54,19 @@ describe('AnimeDetails Component', () => {
   });
 
   it('shows anime details after loading', async () => {
-    vi.mocked(fetchAnimeDetails).mockResolvedValue(mockAnime);
+    vi.mocked(useFetchAnimeDetailsQuery).mockReturnValue({
+      data: { data: mockAnime },
+      isLoading: false,
+      isError: false,
+      error: undefined,
+      refetch: vi.fn(),
+    });
 
-    render(<AnimeDetails animeId={1} onClose={mockOnClose} />);
+    render(
+      <Provider store={mockStore}>
+        <AnimeDetails animeId={1} onClose={mockOnClose} />
+      </Provider>
+    );
 
     await waitFor(() => {
       expect(screen.getByText('Рейтинг:')).toBeInTheDocument();
@@ -38,9 +78,13 @@ describe('AnimeDetails Component', () => {
 
   it('shows error state if fetch fails', async () => {
     const error = new Error('Failed to fetch');
-    vi.mocked(fetchAnimeDetails).mockRejectedValue(error);
+    vi.mocked(useFetchAnimeDetailsQuery).mockRejectedValue(error);
 
-    render(<AnimeDetails animeId={1} onClose={mockOnClose} />);
+    render(
+      <Provider store={mockStore}>
+        <AnimeDetails animeId={1} onClose={mockOnClose} />
+      </Provider>
+    );
 
     await waitFor(() => {
       expect(screen.getByText(/failed to fetch/i)).toBeInTheDocument();

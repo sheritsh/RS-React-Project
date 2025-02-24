@@ -2,11 +2,37 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Card from '../Card';
 import { mockAnime } from '../../__tests__/test-utils';
+import { configureStore } from '@reduxjs/toolkit/react';
+import { apiSlice } from '../../features/api/apiSlice';
+import { Provider } from 'react-redux';
+
+vi.mock('../../features/api/apiSlice', async (importOriginal) => {
+  const actual = await importOriginal() as object;
+
+  return {
+    ...actual,
+    useFetchAnimeQuery: vi.fn(),
+    useFetchAnimeDetailsQuery: vi.fn(),
+  };
+});
+
+// Создаем моковый store
+const mockStore = configureStore({
+  reducer: {
+    [apiSlice.reducerPath]: apiSlice.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(apiSlice.middleware),
+});
 
 describe('Card Component', () => {
   it('renders card with anime data', () => {
-    const onAnimeSelect = vi.fn();
-    render(<Card anime={mockAnime} onAnimeSelect={onAnimeSelect} />);
+    const mockOnAnimeSelect = vi.fn();
+    render(
+      <Provider store={mockStore}>
+        <Card anime={mockAnime} onAnimeSelect={mockOnAnimeSelect} />
+      </Provider>
+    );
 
     const heading = screen.getByRole('heading', { level: 3 });
     const image = screen.getByRole('img');
@@ -17,17 +43,27 @@ describe('Card Component', () => {
   });
 
   it('calls onAnimeSelect when clicked', () => {
-    const onAnimeSelect = vi.fn();
-    render(<Card anime={mockAnime} onAnimeSelect={onAnimeSelect} />);
+    const mockOnAnimeSelect = vi.fn();
+
+    render(
+      <Provider store={mockStore}>
+        <Card anime={mockAnime} onAnimeSelect={mockOnAnimeSelect} />
+      </Provider>
+    );
 
     fireEvent.click(screen.getByRole('article'));
-    expect(onAnimeSelect).toHaveBeenCalledWith(mockAnime);
+    expect(mockOnAnimeSelect).toHaveBeenCalledWith(mockAnime);
   });
 
   it('shows "Описание отсутствует" when synopsis is missing', () => {
-    const onAnimeSelect = vi.fn();
-    const animeWithoutSynopsis = { ...mockAnime, synopsis: null };
-    render(<Card anime={animeWithoutSynopsis} onAnimeSelect={onAnimeSelect} />);
+    const mockOnAnimeSelect = vi.fn();
+    const animeWithoutSynopsis = { ...mockAnime, synopsis: '' };
+
+    render(
+      <Provider store={mockStore}>
+        <Card anime={animeWithoutSynopsis} onAnimeSelect={mockOnAnimeSelect} />
+      </Provider>
+    );
 
     expect(screen.getByText('Описание отсутствует')).toBeInTheDocument();
   });

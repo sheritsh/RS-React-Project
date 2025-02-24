@@ -3,31 +3,56 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import MainPage from '../pages/MainPage';
 import { mockAnime } from './test-utils';
-import { fetchAnime } from '../api';
+import { apiSlice } from '../features/api/apiSlice';
+import { useFetchAnimeQuery } from '../features/api/apiSlice';
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
 
-vi.mock('../api', () => ({
-  fetchAnime: vi.fn(),
-}));
+vi.mock('../features/api/apiSlice', async (importOriginal) => {
+  const actual = importOriginal() as object;
+
+  return {
+    ...actual,
+    useFetchAnimeQuery: vi.fn(),
+  };
+});
+
+const mockStore = configureStore({
+  reducer: {
+    [apiSlice.reducerPath]: apiSlice.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(apiSlice.middleware),
+});
 
 const renderWithRouter = (ui: React.ReactElement) => {
-  return render(<MemoryRouter>{ui}</MemoryRouter>);
+  return render(
+    <Provider store={mockStore}>
+      <MemoryRouter>{ui}</MemoryRouter>
+    </Provider>
+  );
 };
 
 describe('MainPage Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(fetchAnime).mockResolvedValue({
-      data: [mockAnime],
-      pagination: {
-        last_visible_page: 4,
-        has_next_page: true,
-        current_page: 1,
-        items: {
-          count: 25,
-          total: 100,
-          per_page: 25,
+    vi.mocked(useFetchAnimeQuery).mockResolvedValue({
+      data: {
+        data: [mockAnime],
+        pagination: {
+          last_visible_page: 4,
+          has_next_page: true,
+          current_page: 1,
+          items: {
+            count: 25,
+            total: 100,
+            per_page: 25,
+          },
         },
       },
+      isLoading: false,
+      isError: false,
+      refetch: vi.fn(),
     });
   });
 
@@ -86,7 +111,9 @@ describe('MainPage Component', () => {
 
   it('handles error state correctly', async () => {
     const errorMessage = 'Test error';
-    vi.mocked(fetchAnime).mockRejectedValueOnce(new Error(errorMessage));
+    vi.mocked(useFetchAnimeQuery).mockRejectedValueOnce(
+      new Error(errorMessage)
+    );
 
     renderWithRouter(<MainPage />);
 
