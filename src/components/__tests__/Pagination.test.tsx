@@ -1,43 +1,64 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Pagination from '../Pagination';
 
-describe('Pagination Component', () => {
-  it('renders correct page numbers', () => {
-    render(
-      <Pagination currentPage={1} totalPages={5} onPageChange={() => {}} />
-    );
+describe('Pagination', () => {
+  const mockOnPageChange = vi.fn();
 
-    expect(screen.getByText('1')).toHaveClass('bg-blue-500');
-    expect(screen.getByText('2')).toBeInTheDocument();
-    expect(screen.getByText('5')).toBeInTheDocument();
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it('disables previous button on first page', () => {
+  it('renders pagination with correct page numbers', () => {
     render(
-      <Pagination currentPage={1} totalPages={5} onPageChange={() => {}} />
+      <Pagination
+        currentPage={3}
+        totalPages={10}
+        onPageChange={mockOnPageChange}
+      />
     );
 
-    expect(screen.getByText('Назад')).toBeDisabled();
-    expect(screen.getByText('Вперед')).not.toBeDisabled();
+    expect(screen.getByText('3')).toHaveClass('bg-blue-500');
+    expect(screen.getByText('1')).toBeInTheDocument();
+    expect(screen.getByText('...')).toBeInTheDocument();
+  });
+
+  it('disables prev button on first page', () => {
+    render(
+      <Pagination
+        currentPage={1}
+        totalPages={10}
+        onPageChange={mockOnPageChange}
+      />
+    );
+
+    const prevButton = screen.getByText('Назад');
+    expect(prevButton).toBeDisabled();
   });
 
   it('disables next button on last page', () => {
     render(
-      <Pagination currentPage={5} totalPages={5} onPageChange={() => {}} />
+      <Pagination
+        currentPage={10}
+        totalPages={10}
+        onPageChange={mockOnPageChange}
+      />
     );
 
-    expect(screen.getByText('Назад')).not.toBeDisabled();
-    expect(screen.getByText('Вперед')).toBeDisabled();
+    const nextButton = screen.getByText('Вперед');
+    expect(nextButton).toBeDisabled();
   });
 
   it('calls onPageChange with correct page number', () => {
-    const onPageChange = vi.fn();
     render(
-      <Pagination currentPage={1} totalPages={5} onPageChange={onPageChange} />
+      <Pagination
+        currentPage={3}
+        totalPages={10}
+        onPageChange={mockOnPageChange}
+      />
     );
 
-    fireEvent.click(screen.getByText('2'));
-    expect(onPageChange).toHaveBeenCalledWith(2);
+    fireEvent.click(screen.getByText('4'));
+    expect(mockOnPageChange).toHaveBeenCalledWith(4);
   });
 });

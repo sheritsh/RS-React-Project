@@ -18,7 +18,7 @@ const Search: FC<SearchProps> = ({ searchTerm, onSearch }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
+    <form onSubmit={handleSubmit} role="form" className="flex gap-2">
       <input
         type="text"
         value={input}

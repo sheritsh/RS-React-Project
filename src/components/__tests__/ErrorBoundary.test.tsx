@@ -1,23 +1,18 @@
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ErrorBoundary from '../ErrorBoundary';
-import ErrorButton from '../ErrorButton';
 
-describe('ErrorBoundary Component', () => {
+describe('ErrorBoundary', () => {
   const originalConsoleError = console.error;
-  const originalLocation = window.location;
-
   beforeAll(() => {
     console.error = vi.fn();
-    vi.stubGlobal('location', { ...originalLocation, reload: vi.fn() });
   });
 
   afterAll(() => {
     console.error = originalConsoleError;
-    vi.stubGlobal('location', originalLocation);
   });
 
-  it('renders children when no error', () => {
+  it('renders children when there is no error', () => {
     render(
       <ErrorBoundary>
         <div>Test Content</div>
@@ -27,36 +22,41 @@ describe('ErrorBoundary Component', () => {
     expect(screen.getByText('Test Content')).toBeInTheDocument();
   });
 
-  it('renders error UI when error occurs', () => {
+  it('renders error UI when there is an error', () => {
+    const ThrowError = () => {
+      throw new Error('Test error');
+    };
+
     render(
       <ErrorBoundary>
-        <ErrorButton />
+        <ThrowError />
       </ErrorBoundary>
     );
 
-    const errorButton = screen.getByText('Вызвать ошибку');
-    fireEvent.click(errorButton);
-
     expect(screen.getByText('Что-то пошло не так')).toBeInTheDocument();
-    expect(screen.getByText('Перезагрузить страницу')).toBeInTheDocument();
+    expect(
+      screen.getByText('Пожалуйста, попробуйте перезагрузить страницу')
+    ).toBeInTheDocument();
   });
 
   it('reloads page when reload button is clicked', () => {
-    const reloadMock = vi.fn();
-    vi.spyOn(window.location, 'reload').mockImplementation(reloadMock);
+    const mockReload = vi.fn();
+    Object.defineProperty(window, 'location', {
+      value: { reload: mockReload },
+      writable: true,
+    });
+
+    const ThrowError = () => {
+      throw new Error('Test error');
+    };
 
     render(
       <ErrorBoundary>
-        <ErrorButton />
+        <ThrowError />
       </ErrorBoundary>
     );
 
-    const errorButton = screen.getByText('Вызвать ошибку');
-    fireEvent.click(errorButton);
-
-    const reloadButton = screen.getByText('Перезагрузить страницу');
-    fireEvent.click(reloadButton);
-
-    expect(reloadMock).toHaveBeenCalled();
+    fireEvent.click(screen.getByText('Перезагрузить страницу'));
+    expect(mockReload).toHaveBeenCalled();
   });
 });
