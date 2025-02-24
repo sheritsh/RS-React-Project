@@ -23,7 +23,7 @@ const Pagination: FC<PaginationProps> = ({
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Назад
       </button>
@@ -73,7 +73,7 @@ const Pagination: FC<PaginationProps> = ({
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Вперед
       </button>

@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '/logo.png';
 import Search from './Search';
+import ThemeSelector from './ThemeSelector';
 
 interface HeaderProps {
   searchTerm: string;
@@ -26,8 +27,11 @@ const Header: FC<HeaderProps> = ({ searchTerm, onSearch, reset }) => {
             />
           </Link>
         </div>
-        <div className="w-full md:w-auto flex-grow max-w-2xl">
+        <div className="md:w-auto flex-grow max-w-2xl">
           <Search searchTerm={searchTerm} onSearch={onSearch} />
+        </div>
+        <div className="flex-shrink-0">
+          <ThemeSelector />
         </div>
       </div>
     </header>

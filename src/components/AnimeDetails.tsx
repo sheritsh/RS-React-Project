@@ -21,7 +21,7 @@ const AnimeDetails: FC<AnimeDetailsProps> = ({ animeId, onClose }) => {
   if (!data) return null;
 
   return (
-    <div className="p-4 relative">
+    <div className="p-4 relative light:bg-white dark:bg-[#101828] h-screen">
       <button
         role="button"
         aria-label="закрыть"
@@ -49,8 +49,10 @@ const AnimeDetails: FC<AnimeDetailsProps> = ({ animeId, onClose }) => {
           alt={data.data.title}
           className="w-64 h-auto rounded-lg shadow-lg"
         />
-        <h2 className="text-2xl font-bold text-gray-800">{data.data.title}</h2>
-        <p className="text-gray-600">{data.data.synopsis}</p>
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+          {data.data.title}
+        </h2>
+        <p className="text-gray-600 dark:text-gray-300">{data.data.synopsis}</p>
 
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
