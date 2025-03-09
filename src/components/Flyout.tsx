@@ -32,7 +32,7 @@ const Flyout: React.FC = () => {
         <span className="text-black dark:text-white max-sm:scale-70">
           {selectedAnime.length} аниме выбрано для загрузки данных
         </span>
-        <div className='max-sm:flex max-sm:justify-center'>
+        <div className="max-sm:flex max-sm:justify-center">
           <button
             onClick={() => dispatch(unselectAllAnimeCards())}
             className="mr-4 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded cursor-pointer select-none max-sm:scale-70 max-sm:center"
