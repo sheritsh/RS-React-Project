@@ -11,7 +11,7 @@ const App: React.FC = () => {
   return (
     <Provider store={store}>
       <Router>
-        <div className="h-[calc(100vh-4rem)] container mx-auto pt-12">
+        <div className="container mx-auto pt-12">
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route
@@ -21,8 +21,8 @@ const App: React.FC = () => {
             <Route path="/hook-form" element={<ReactHookFormPage />} />
             <Route path="/sheritsh-REACT2025Q1/" element={<MainPage />} />
           </Routes>
+          <Footer />
         </div>
-        <Footer />
       </Router>
     </Provider>
   );

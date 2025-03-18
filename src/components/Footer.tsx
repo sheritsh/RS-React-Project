@@ -3,7 +3,7 @@ import logo from '/rslogo.png';
 
 const Footer: FC = () => {
   return (
-    <footer className="mt-auto bg-gray-900 text-white py-4 px-6 flex justify-between items-center">
+    <footer className="mt-[20px] bg-gray-900 text-white py-4 px-6 flex justify-between items-center">
       <a
         href="https://github.com/sheritsh"
         className="text-gray-300 hover:text-white transition"
