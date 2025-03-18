@@ -1,11 +1,11 @@
-import React from 'react';
+import { FC } from 'react';
 import { getPasswordStrength } from '../utils/fileUtils';
 
 interface PasswordStrengthMeterProps {
   password: string;
 }
 
-const PasswordStrengthMeter: React.FC<PasswordStrengthMeterProps> = ({
+const PasswordStrengthMeter: FC<PasswordStrengthMeterProps> = ({
   password,
 }) => {
   const strength = getPasswordStrength(password);
@@ -59,4 +59,4 @@ const PasswordStrengthMeter: React.FC<PasswordStrengthMeterProps> = ({
   );
 };
 
-export default PasswordStrengthMeter;
+export { PasswordStrengthMeter };

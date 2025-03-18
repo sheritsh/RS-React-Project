@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { FC, useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 
@@ -9,7 +9,7 @@ interface CountryAutocompleteProps {
   error?: string;
 }
 
-const CountryAutocomplete: React.FC<CountryAutocompleteProps> = ({
+const CountryAutocomplete: FC<CountryAutocompleteProps> = ({
   value,
   onChange,
   id,
@@ -106,4 +106,4 @@ const CountryAutocomplete: React.FC<CountryAutocompleteProps> = ({
   );
 };
 
-export default CountryAutocomplete;
+export { CountryAutocomplete };

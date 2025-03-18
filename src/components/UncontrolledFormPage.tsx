@@ -1,18 +1,18 @@
-import React, { useRef, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addUncontrolledFormData } from '../store/formDataSlice';
 import { fromZodError } from 'zod-validation-error';
 import { formSchema } from '../validations/schema';
-import CountryAutocomplete from './CountryAutocomplete';
-import PasswordStrengthMeter from './PasswordStrengthMeter';
+import { CountryAutocomplete } from './CountryAutocomplete';
+import { PasswordStrengthMeter } from './PasswordStrengthMeter';
 import { fileToBase64 } from '../utils/fileUtils';
 import { FormData } from '../types';
 import { ZodError } from 'zod';
 
 type ErrorType = Record<string, string>;
 
-const UncontrolledFormPage: React.FC = () => {
+const UncontrolledFormPage: FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const ageRef = useRef<HTMLInputElement>(null);
@@ -308,4 +308,4 @@ const UncontrolledFormPage: React.FC = () => {
   );
 };
 
-export default UncontrolledFormPage;
+export { UncontrolledFormPage };

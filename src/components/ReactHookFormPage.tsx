@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import { FC, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { formSchema, FormSchemaType } from '../validations/schema';
 import { addHookFormData } from '../store/formDataSlice';
-import CountryAutocomplete from './CountryAutocomplete';
-import PasswordStrengthMeter from './PasswordStrengthMeter';
+import { CountryAutocomplete } from './CountryAutocomplete';
+import { PasswordStrengthMeter } from './PasswordStrengthMeter';
 import { fileToBase64 } from '../utils/fileUtils';
 import { FormData } from '../types';
 
-const ReactHookFormPage: React.FC = () => {
+const ReactHookFormPage: FC = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -276,4 +276,4 @@ const ReactHookFormPage: React.FC = () => {
   );
 };
 
-export default ReactHookFormPage;
+export { ReactHookFormPage };

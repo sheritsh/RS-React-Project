@@ -2,9 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store/index';
-import MainPage from './components/MainPage';
-import UncontrolledFormPage from './components/UncontrolledFormPage';
-import ReactHookFormPage from './components/ReactHookFormPage';
+import { MainPage } from './components/MainPage';
+import { UncontrolledFormPage } from './components/UncontrolledFormPage';
+import { ReactHookFormPage } from './components/ReactHookFormPage';
 import { Footer } from './components/Footer';
 
 const App: React.FC = () => {
@@ -19,6 +19,7 @@ const App: React.FC = () => {
               element={<UncontrolledFormPage />}
             />
             <Route path="/hook-form" element={<ReactHookFormPage />} />
+            <Route path="/sheritsh-REACT2025Q1/" element={<MainPage />} />
           </Routes>
         </div>
         <Footer />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { FormData } from '../types';
 
 interface DataTileProps {
@@ -7,7 +7,7 @@ interface DataTileProps {
   isNew: boolean;
 }
 
-const DataTile: React.FC<DataTileProps> = ({ title, data, isNew }) => {
+const DataTile: FC<DataTileProps> = ({ title, data, isNew }) => {
   const [highlight, setHighlight] = useState(isNew);
 
   useEffect(() => {
@@ -79,4 +79,4 @@ const DataTile: React.FC<DataTileProps> = ({ title, data, isNew }) => {
   );
 };
 
-export default DataTile;
+export { DataTile };

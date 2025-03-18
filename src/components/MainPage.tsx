@@ -1,10 +1,10 @@
-import React from 'react';
+import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
-import DataTile from './DataTile';
+import { DataTile } from './DataTile';
 
-const MainPage: React.FC = () => {
+const MainPage: FC = () => {
   const { uncontrolledForm, hookForm, lastAddedType, timestamp } = useSelector(
     (state: RootState) => state.formData
   );
@@ -66,4 +66,4 @@ const MainPage: React.FC = () => {
   );
 };
 
-export default MainPage;
+export { MainPage };
