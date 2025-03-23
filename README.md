@@ -1,54 +1,54 @@
-# React + TypeScript + Vite
+# React Performance
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Getting Started
 
-Currently, two official plugins are available:
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Performance Profiling Instructions
 
-## Expanding the ESLint configuration
+1. Open Chrome DevTools (F12)
+2. Go to the React tab
+3. Select the Profiler
+4. Click the Record button
+5. Perform the following actions:
+   - Sort by population
+6. Stop recording
+7. Analyze the results in the Flame Graph and Ranked Chart
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Performance Profiling Results
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
-```
+### Before Optimization
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- Commit Duration: **2.3s**
+- Render Duration: **40.5ms**
+- Interactions:
+  Sort by population
+- Flame Graph: Visual representation of component render times.
+  ![Описание изображения](public/unoptimizedSorting.png)
+- Ranked Chart: Sorted list of components by render duration.
+  ![Описание изображения](public/unoptimizedSortingRanked.png)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+### After Optimization
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-});
-```
+- Commit Duration: **1.8s**
+- Render Duration: **4.6ms**
+- Interactions:
+  Sort by population
+- Flame Graph: Visual representation of component render times.
+  ![Описание изображения](public/optimizedSorting.png)
+- Ranked Chart: Sorted list of components by render duration.
+  ![Описание изображения](public/optimizedSortingRanked.png)
+
+### Comprassion Parameters
+
+- **88.8%** reduction in render time
+- **21.7%** reduction in commit duration
+- Optimized component tree with memoized values and callbacks
